@@ -11,9 +11,9 @@
 
   "routes": [
     {
-      "src": "/src(.*)",
+      "src": "/(.*)",
 
-      "dest": "server.js"
+      "dest": "/src/server.js"
     }
   ]
 }
