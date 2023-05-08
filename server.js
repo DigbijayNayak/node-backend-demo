@@ -63,9 +63,11 @@ app.post("/api/articles/:name/comments", async (req, res) => {
   }
 });
 
+const PORT = process.env.PORT || 8000;
+
 connectToDb(() => {
   console.log("Successfully connected to database!");
-  app.listen(8000, () => {
-    console.log("Server is listening on port 8000");
+  app.listen(PORT, () => {
+    console.log("Server is listening on port " + PORT);
   });
 });
