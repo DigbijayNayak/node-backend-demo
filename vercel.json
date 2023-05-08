@@ -13,7 +13,7 @@
     {
       "src": "/(.*)",
 
-      "dest": "/src/server.js"
+      "dest": "server.js"
     }
   ]
 }
