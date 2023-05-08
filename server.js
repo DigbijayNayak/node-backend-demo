@@ -62,10 +62,10 @@ app.post("/api/articles/:name/comments", async (req, res) => {
     res.send("That article doesn't exist!");
   }
 });
-const PORT = process.env.PORT || 8000;
+
 connectToDb(() => {
   console.log("Successfully connected to database!");
-  app.listen(PORT, () => {
-    console.log("Server is listening on port " + PORT);
+  app.listen(8000, () => {
+    console.log("Server is listening on port 8000");
   });
 });
