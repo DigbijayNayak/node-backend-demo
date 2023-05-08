@@ -1,5 +1,5 @@
-import express from "express";
-import { db, connectToDb } from "./db.js";
+const express = require("express");
+const { MongoClient } = require("mongodb");
 
 const app = express();
 app.use(express.json());
@@ -17,6 +17,11 @@ app.get("/hello/:name", (req, res) => {
 app.get("/api/articles/:name", async (req, res) => {
   const { name } = req.params;
 
+  const client = new MongoClient("mongodb://127.0.0.1:27017");
+  await client.connect();
+
+  const db = client.db("react-blog-db");
+
   const article = await db.collection("articles").findOne({ name });
 
   if (article) {
@@ -29,6 +34,10 @@ app.get("/api/articles/:name", async (req, res) => {
 app.put("/api/articles/:name/upvote", async (req, res) => {
   const { name } = req.params;
 
+  const client = new MongoClient("mongodb://127.0.0.1:27017");
+  await client.connect();
+
+  const db = client.db("react-blog-db");
   await db.collection("articles").updateOne(
     { name },
     {
@@ -38,6 +47,7 @@ app.put("/api/articles/:name/upvote", async (req, res) => {
   const article = await db.collection("articles").findOne({ name });
 
   if (article) {
+    article.upvotes += 1;
     res.send(`The ${name} article now has ${article.upvotes} upvotes!!!`);
   } else {
     res.send("That article doesn't exist");
@@ -47,7 +57,10 @@ app.put("/api/articles/:name/upvote", async (req, res) => {
 app.post("/api/articles/:name/comments", async (req, res) => {
   const { name } = req.params;
   const { postedBy, text } = req.body;
+  const client = new MongoClient("mongodb://127.0.0.1:27017");
+  await client.connect();
 
+  const db = client.db("react-blog-db");
   await db.collection("articles").updateOne(
     { name },
     {
@@ -65,9 +78,8 @@ app.post("/api/articles/:name/comments", async (req, res) => {
 
 const PORT = process.env.PORT || 8000;
 
-connectToDb(() => {
-  console.log("Successfully connected to database!");
-  app.listen(PORT, () => {
-    console.log("Server is listening on port " + PORT);
-  });
+app.listen(PORT, () => {
+  console.log("Server is listening on port " + PORT);
 });
+
+module.exports = app;
